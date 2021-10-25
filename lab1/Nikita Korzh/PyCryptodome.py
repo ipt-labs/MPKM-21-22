@@ -18,8 +18,8 @@ print("--------- Crypto.Cipher.Package ---------")
 print("---------       AES(EAX)        ---------")
 
 key = token_bytes(32)
-text_test = open('AES(EAX).txt', 'r')
-plaintext1 = text_test.read()
+#text_test = open('AES(EAX).txt', 'r')
+plaintext1 = "Let me introduce myself. My name is Mariya I am a 20-year-old student from Donetsk. I study at the university in my native town and my future profession is bookkeeping. I live with my parents and my elder sister Lena. We are a friendly family. Lena is 2 ye"
 # print(text)
 
 
@@ -152,18 +152,18 @@ print("--------- Crypto.Signature.Package ---------")
 
 key = RSA.generate(2048)
 private_key = key.export_key()
-file_out = open("private.key", "wb")
+file_out = open("../private.key", "wb")
 file_out.write(private_key)
 file_out.close()
 
 public_key = key.publickey().export_key()
-file_out = open("public.key", "wb")
+file_out = open("../public.key", "wb")
 file_out.write(public_key)
 file_out.close()
 
 message = b'This message is from me'
 
-key = RSA.import_key(open('private.key').read())
+key = RSA.import_key(open('../private.key').read())
 h = SHA256.new(message)
 
 
@@ -172,21 +172,21 @@ signature = signer.sign(h)
 
 print(signature.hex())
 
-file_out = open("signature.pem", "wb")
+file_out = open("../signature.pem", "wb")
 file_out.write(signature)
 file_out.close()
 
-file_out = open("message.txt", "wb")
+file_out = open("../message.txt", "wb")
 file_out.write(message)
 file_out.close()
 
-key = RSA.import_key(open('public.key').read())
+key = RSA.import_key(open('../public.key').read())
 
-file_in = open("message.txt", "rb")
+file_in = open("../message.txt", "rb")
 message = file_in.read()
 file_in.close()
 
-file_in = open("signature.pem", "rb")
+file_in = open("../signature.pem", "rb")
 signature = file_in.read()
 file_in.close()
 h = SHA256.new(message)
