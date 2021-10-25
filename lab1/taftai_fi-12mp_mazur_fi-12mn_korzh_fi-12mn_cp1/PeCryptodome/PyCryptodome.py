@@ -172,7 +172,7 @@ signature = signer.sign(h)
 
 print(signature.hex())
 
-file_out = open("../signature.pem", "wb")
+file_out = open("../../signature.pem", "wb")
 file_out.write(signature)
 file_out.close()
 
@@ -186,7 +186,7 @@ file_in = open("../message.txt", "rb")
 message = file_in.read()
 file_in.close()
 
-file_in = open("../signature.pem", "rb")
+file_in = open("../../signature.pem", "rb")
 signature = file_in.read()
 file_in.close()
 h = SHA256.new(message)
