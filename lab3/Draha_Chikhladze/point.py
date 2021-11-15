@@ -7,6 +7,16 @@ class EllipticCurvePoint:
         self.__a = a
         self.__mod = p
 
+    
+    @property
+    def x(self):
+        return self.__x
+
+
+    @property
+    def y(self):
+        return self.__y
+
 
     def __eq__(self, other):
         if isinstance(other, EllipticCurvePoint):
