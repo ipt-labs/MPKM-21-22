@@ -29,5 +29,42 @@ def mod(x, pol):
             bx = bin(x)[2:]
         return x
 
+def mul(x1, x2, pol):
+    if x1 == 0 or x2 == 0:
+            return 0
+        
+    bx1 = bin(x1)[2:][::-1]
+    indexes = [i for i in range(len(bx1)) if bx1[i] == '1']
+    res = 0
+    for i in indexes:
+        res ^= x2 << i
+
+    return norm(res, pol)
+
+
+def div(divided, divider):
+    quotient = 0
+    ldivider = len(bin(divider)[2:])
+    while divided >= divider:
+        ldivided = len(bin(divided)[2:])
+        quotient ^= 1 << (ldivided - ldivider)
+        divided ^= divider << (ldivided - ldivider)
+    return quotient
+
+
+def mod_inverse(value, module):
+    v = [0, 1]
+    rem = 1
+    a = module
+
+    while rem > 0:
+        tmp = div(a, value)
+        v[0] ^= mul(v[1], tmp, module)
+        v[0], v[1] = v[1], v[0]
+        rem = mod(a, value)
+        a = value
+        value = rem
+    return v[0]
+
 if __name__ == '__main__':
     pass
