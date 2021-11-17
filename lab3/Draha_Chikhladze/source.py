@@ -52,6 +52,17 @@ def div(divided, divider):
     return quotient
 
 
+def pow(base, exponenta, pol):
+    itr = bin(exponenta)[2:][::-1]
+    tmp = base
+    result = 1
+    for i in itr:
+        if i == '1':
+            result = mul(result, tmp, pol)
+        tmp = mul(tmp, tmp, pol)
+    return result
+
+
 def mod_inverse(value, module):
     v = [0, 1]
     rem = 1
