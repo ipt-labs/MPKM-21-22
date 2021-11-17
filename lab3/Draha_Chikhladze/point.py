@@ -1,5 +1,4 @@
-from operator import invert
-from source import mod, norm, mul, div, mod_inverse
+from source import mul, mod_inverse
 from copy import copy
 
 class EllipticCurvePoint:
