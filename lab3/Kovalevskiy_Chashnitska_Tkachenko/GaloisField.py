@@ -12,9 +12,9 @@ class GaloisField:
 
 
     def __repr__(self):
-        return f'''GaloisField: m={self.__m},
-        irreducible polinomial x^{self.__m} + x^{self.__l} + x^{self.__j} + x^{self.__k},
-        primitive ord={hex(self.__primitive_ord)}'''
+        return f'''m={self.__m},
+            irreducible polinomial: x^{self.__m} + x^{self.__l} + x^{self.__j} + x^{self.__k},
+            primitive ord={hex(self.__primitive_ord)}'''
 
 
     def get_random(self, start=0, stop=None):
@@ -92,6 +92,3 @@ class GaloisField:
             return 0, 0
         ht = self.calculate_half_trace(v)
         return self.multiply_elements(ht, u), 2
-
-# gf = GaloisField(m=179, l=4, j=2, k=1)
-# print(gf)

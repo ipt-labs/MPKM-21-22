@@ -7,6 +7,16 @@ class EllipticCurve:
         self.__n = n
         self.__infinity = (0, 0)
 
+
+    def __repr__(self):
+        return f'''Elliptic curve:
+        Galois field:
+            {self.__gf}
+        A={hex(self.__A)}
+        B={hex(self.__B)}
+        n={hex(self.__n)}'''
+
+
     def is_on_curve(self, p):
         if p == self.__infinity:
             return True
@@ -118,12 +128,3 @@ class EllipticCurve:
             r = self.multiply_point(p, self.__n)
             if r == self.__infinity:
                 return p
-
-
-from GaloisField import GaloisField
-gf = GaloisField(m=179, l=4, j=2, k=1)
-ec = EllipticCurve(gf)
-
-x, y = ec.get_base_point()
-print(hex(x))
-print(hex(y))
