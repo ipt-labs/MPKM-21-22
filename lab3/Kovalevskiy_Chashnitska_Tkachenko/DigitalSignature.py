@@ -11,8 +11,15 @@ class DigitalSignature:
         self._hash_func = SHA256.new
 
 
+    def get_random(self, start=1, stop=None):
+        if stop != None:
+            return random.randint(start, stop)
+        else:
+            return random.randint(start, self._mask)
+
+
     def get_private_key(self):
-        return self.get_random(minimum=1)
+        return self.get_random(start=1)
 
 
     def get_public_key(self, d):
@@ -26,7 +33,7 @@ class DigitalSignature:
 
     def get_presignature(self):
         while True:
-            e = self.get_random(minimum=1)
+            e = self.get_random(start=1)
             x, y = self._ec.multiply_point(self._base_point, e)
             if x != 0:
                 return e, x
@@ -76,7 +83,3 @@ class DigitalSignature:
             self._ec.multiply_point(Q, r))
         r_2 = self._ec._gf.multiply_elements(h, x) & self._mask
         return r == r_2
-
-
-    def get_random(self, start=1, stop=self._mask):
-        return random.randint(start, stop)
