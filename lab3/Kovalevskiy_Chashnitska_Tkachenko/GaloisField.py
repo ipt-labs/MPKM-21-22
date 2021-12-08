@@ -3,25 +3,25 @@ import random
 
 class GaloisField:
     def __init__(self, m, l, j, k):
-        self.__m = m
-        self.__l = l
-        self.__j = j
-        self.__k = k
-        self.__f = (1 << m) + (1 << l) + (1 << j) + (1 << k) + 1
-        self.__primitive_ord = (1 << m) - 1
+        self._m = m
+        self._l = l
+        self._j = j
+        self._k = k
+        self._f = (1 << m) + (1 << l) + (1 << j) + (1 << k) + 1
+        self._primitive_ord = (1 << m) - 1
 
 
     def __repr__(self):
-        return f'''m={self.__m},
-            irreducible polinomial: x^{self.__m} + x^{self.__l} + x^{self.__j} + x^{self.__k},
-            primitive ord={hex(self.__primitive_ord)}'''
+        return f'''m={self._m},
+            irreducible polinomial: x^{self._m} + x^{self._l} + x^{self._j} + x^{self._k},
+            primitive ord={hex(self._primitive_ord)}'''
 
 
     def get_random(self, start=0, stop=None):
         if stop != None:
             return random.randint(start, stop)
         else:
-            return random.randint(start, self.__primitive_ord)
+            return random.randint(start, self._primitive_ord)
 
 
     def add_elements(self, x, y):
@@ -34,10 +34,10 @@ class GaloisField:
             if y & 1 == 1:
                 result ^= x
             y //= 2
-            carry = x >> (self.__m - 1)
-            x = (x << 1) & self.__primitive_ord
+            carry = x >> (self._m - 1)
+            x = (x << 1) & self._primitive_ord
             if carry == 1:
-                x ^= self.__primitive_ord & self.__f
+                x ^= self._primitive_ord & self._f
         return result
 
 
@@ -56,7 +56,7 @@ class GaloisField:
 
 
     def get_inverse_element(self, x):
-        return self.pow(x, (1 << self.__m) - 2)
+        return self.pow(x, (1 << self._m) - 2)
 
 
     def divide_element(self, x, y):
@@ -65,7 +65,7 @@ class GaloisField:
 
     def calculate_trace(self, x):
         result = x
-        c = self.__m - 1
+        c = self._m - 1
         while c != 0:
             result = self.add_elements(x, self.square_element(result))
             c -= 1
@@ -74,7 +74,7 @@ class GaloisField:
 
     def calculate_half_trace(self, x):
         result = x
-        c = (self.__m - 1) >> 1
+        c = (self._m - 1) >> 1
         while c != 0:
             result = self.add_elements(self.pow(result, 4), x)
             c -= 1
@@ -83,7 +83,7 @@ class GaloisField:
 
     def solve_quadratic_equation(self, u, w):
         if u == 0:
-            z = self.pow(w, 1 << (self.__m - 1))
+            z = self.pow(w, 1 << (self._m - 1))
             return z, 1
         if w == 0:
             return 0, 2
