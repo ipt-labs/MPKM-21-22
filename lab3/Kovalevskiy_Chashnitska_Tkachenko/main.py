@@ -4,8 +4,30 @@ from User import User
 
 signature_length = 512
 
-gf = GaloisField(m=179, l=4, j=2, k=1)
-ec = EllipticCurve(gf)
+# x^431+x^5+x^3+x+1
+# m = 431
+# l = 5
+# j = 3
+# k = 1
+# A = 1
+# B = 0x03CE10490F6A708FC26DFE8C3D27C4F94E690134D5BFF988D8D28AAEAEDE975936C66BAC536B18AE2DC312CA493117DAA469C640CAF3
+# n = 0x3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBA3175458009A8C0A724F02F81AA8A1FCBAF80D90C7A95110504CF
+
+# x^163+x^7+x^6+x^3+1
+m = 163
+l = 7
+j = 6
+k = 3
+A = 1
+B = 0x5FF6108462A2DC8210AB403925E638A19C1455D21
+n = 0x400000000000000000002BEC12BE2262D39BCF14D
+
+
+
+# print(len(bin(n)[2:]))
+
+gf = GaloisField(m=m, l=l, j=j, k=k)
+ec = EllipticCurve(gf, A=A, B=B, n=n)
 base_point = ec.get_base_point()
 
 Alice = User(ec, base_point)

@@ -7,7 +7,7 @@ class GaloisField:
         self._l = l
         self._j = j
         self._k = k
-        self._f = (1 << m) + (1 << l) + (1 << j) + (1 << k) + 1
+        self._poly = (1 << m) + (1 << l) + (1 << j) + (1 << k) + 1
         self._primitive_ord = (1 << m) - 1
 
 
@@ -37,7 +37,7 @@ class GaloisField:
             carry = x >> (self._m - 1)
             x = (x << 1) & self._primitive_ord
             if carry == 1:
-                x ^= self._primitive_ord & self._f
+                x ^= self._primitive_ord & self._poly
         return result
 
 

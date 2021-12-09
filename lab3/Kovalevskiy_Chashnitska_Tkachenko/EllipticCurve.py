@@ -1,6 +1,5 @@
 class EllipticCurve:
-    def __init__(self, gf, A=1, B=0x4A6E0856526436F2F88DD07A341E32D04184572BEB710,
-                 n=0x3FFFFFFFFFFFFFFFFFFFFFFB981960435FE5AB64236EF):
+    def __init__(self, gf, A, B, n):
         self._gf = gf
         self._A = A
         self._B = B
