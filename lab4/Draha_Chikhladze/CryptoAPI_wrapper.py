@@ -1,5 +1,6 @@
 from DSTU_4145_2002 import DSTU
 from source import write, read
+import os
 
 class Wrapper:
     def __init__(self, path):
@@ -9,8 +10,6 @@ class Wrapper:
 
 
     def generate_private_key(self):
-        self.del_private_key()
-        self.del_public_key()
         self.__private_key = self.__DSTU.private_key
         
 
@@ -21,7 +20,6 @@ class Wrapper:
         if self.__DSTU.private_key != self.__private_key:
             self.__DSTU.set_private_key(self.__private_key)
 
-        self.del_public_key()
         self.__public_key = self.__DSTU.public_key
 
 
@@ -57,7 +55,7 @@ class Wrapper:
     def verify(self, D):
         if self.__public_key == 0:
             raise Exception()
-        return self.__DSTU.sign(D, self.__public_key)
+        return self.__DSTU.verify(D, self.__public_key)
 
 
     def del_private_key(self):
@@ -68,3 +66,20 @@ class Wrapper:
     def del_public_key(self):
         del self.__public_key
         self.__public_key = 0
+
+if __name__ == '__main__':
+    path = path = os.path.dirname(os.path.abspath(__file__))
+    key_path = f'{path}/key'
+
+    st1 = Wrapper(f'{path}/elliptic_curve_parameters/elliptic_curve163.json')
+    st1.generate_private_key()
+    st1.generate_public_key()
+    st1.export_public_key(key_path)
+    sig = st1.sign('hello')
+
+    st2 = Wrapper(f'{path}/elliptic_curve_parameters/elliptic_curve163.json')
+    st2.import_public_key(key_path)
+    res = st2.verify(sig)
+
+    print(res)
+

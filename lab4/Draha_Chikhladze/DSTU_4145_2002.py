@@ -88,10 +88,12 @@ class DSTU:
             s = (e + d * r) % self.__EC.order
 
         D = ['0' * (self.__LD // 8 - len(hex(s)[2:])) + hex(s)[2:], '0' * (self.__LD // 8 - len(hex(r)[2:])) + hex(r)[2:]]        
-        return ''.join([T, *D])
+        return [''.join([T, *D]), self.__EC.compress(self.__EC.G)]
 
 
-    def verify(self, sign, c_public_key):
+    def verify(self, sign_, c_public_key):
+        sign, G = sign_
+        G = self.__EC.uncompress(G)
         public_key = self.__EC.uncompress(c_public_key)
 
         Lt = len(sign) - (self.__LD // 4)
@@ -106,7 +108,7 @@ class DSTU:
         if h == 0:
             h = 1
 
-        R = self.__EC.G * s + public_key * r
+        R = G * s + public_key * r
         y = mul(R.x, h, self.__EC.p)
         ir = hex(self.__norm(y))
         return ir == hex(r)
@@ -118,4 +120,9 @@ if __name__ == '__main__':
     
     sign = st.sign('hello', st.private_key)
     res = st.verify(sign, st.public_key)
-    print(res)  
+    print(res)
+
+    st2 = DSTU(f'{path}/elliptic_curve_parameters/elliptic_curve163.json')
+    res = st2.verify(sign, st.public_key)
+
+    print(res)
