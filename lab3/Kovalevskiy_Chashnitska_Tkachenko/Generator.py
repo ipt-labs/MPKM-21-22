@@ -10,6 +10,7 @@ class Generator:
         self._s = self.get_s()
         self._D = int(time()) & 0xFFFFFFFFFFFFFFFF
         self._I = self._cipher_gost.encrypt(self._D, self._key)
+        print('Generator init ok!')
 
 
     def get_s(self):

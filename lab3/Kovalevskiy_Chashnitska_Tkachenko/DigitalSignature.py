@@ -9,13 +9,16 @@ class DigitalSignature:
         self._length = len(bin(self._ec._n)[2:])
         self._mask = (1 << (self._length - 1)) - 1
         self._hash_func = SHA256.new
+        # self._generator = generator
 
 
     def get_random(self, start=1, stop=None):
         if stop != None:
             return random.randint(start, stop)
+            # return self._ec._gf._generator.get_randint(start, stop)
         else:
             return random.randint(start, self._mask)
+            # return self._ec._gf._generator.get_randint(start, self._mask)
 
 
     def get_private_key(self):

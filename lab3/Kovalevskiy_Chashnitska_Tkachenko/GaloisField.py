@@ -2,13 +2,14 @@ import random
 
 
 class GaloisField:
-    def __init__(self, m, l, j, k):
+    def __init__(self, m, l, j, k): #, generator):
         self._m = m
         self._l = l
         self._j = j
         self._k = k
         self._poly = (1 << m) + (1 << l) + (1 << j) + (1 << k) + 1
         self._primitive_ord = (1 << m) - 1
+        # self._generator = generator
 
 
     def __repr__(self):
@@ -20,8 +21,10 @@ class GaloisField:
     def get_random(self, start=0, stop=None):
         if stop != None:
             return random.randint(start, stop)
+            # return self._generator.get_randint(start, stop)
         else:
             return random.randint(start, self._primitive_ord)
+            # return self._generator.get_randint(start, self._primitive_ord)
 
 
     def add_elements(self, x, y):

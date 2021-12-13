@@ -1,6 +1,7 @@
 from GaloisField import GaloisField
 from EllipticCurve import EllipticCurve
 from User import User
+from Generator import Generator
 
 signature_length = 512
 
@@ -24,17 +25,21 @@ n = 0x400000000000000000002BEC12BE2262D39BCF14D
 
 
 
-# print(len(bin(n)[2:]))
+key = [0xFFFFFFFF, 0x12345678, 0x00120477, 0x77AE441F, 0x81C63123, 0x99DEEEEE, 0x09502978, 0x68FA3105]
 
-gf = GaloisField(m=m, l=l, j=j, k=k)
+# generator = Generator(key)
+gf = GaloisField(m=m, l=l, j=j, k=k) #, generator=generator)
 ec = EllipticCurve(gf, A=A, B=B, n=n)
 base_point = ec.get_base_point()
+print('Base point selected')
 
 Alice = User(ec, base_point)
 Bob = User(ec, base_point)
 
 Alice.generate_keypair()
+print('Alice\'s keys created')
 Bob.generate_keypair()
+print('Bob\'s keys created')
 
 alice_message = 'Hello, Bob!'
 bob_message = 'Hey!'
