@@ -1,0 +1,321 @@
+//for generate IV and Key
+#include "D:\cryptopp820\osrng.h"
+
+
+//for exceptions
+#include "D:\cryptopp820\cryptlib.h"
+
+//for hex viewing
+#include "D:\cryptopp820\hex.h"
+
+
+//converter input into cipher
+#include "D:\cryptopp820\filters.h"
+
+//add AES
+#include "D:\cryptopp820\aes.h"
+ 
+#include "D:\cryptopp820\modes.h"
+
+#include "D:\cryptopp820\md5.h"
+
+#include "D:\cryptopp820\eax.h"
+
+#include "D:\cryptopp820\rijndael.h"
+
+#include "D:\cryptopp820\files.h"
+
+#include "D:\cryptopp820\eax.h"
+
+#include "D:\cryptopp820\rsa.h"
+
+#include "D:\cryptopp820\sha.h"
+
+#include "D:\cryptopp820\salsa.h"
+
+#include <iostream>
+
+#include <string>
+
+#include <ctime>
+
+#include <iomanip>
+
+#include <cstdlib>
+
+
+using namespace std;
+
+
+
+string Generator(int size) {
+
+	srand(time(NULL));
+	string text = "";
+
+	for (int i = 0, j = 0; i < size; i++) {
+		j = rand() % 10 + 1;
+
+		if (j > size - i) j = size - i;
+		i += j;
+
+		for (int k = 0; k < j; k++) {
+			text += (char)(rand() % 26 + 97);
+		}
+		text += ' ';
+	}
+	
+	return text;
+}
+
+int main()
+{
+	using namespace CryptoPP;
+
+	AutoSeededRandomPool prng;
+	HexEncoder encoder(new FileSink(cout));
+
+	SecByteBlock key(AES::DEFAULT_KEYLENGTH);
+	SecByteBlock iv(AES::BLOCKSIZE);
+
+	prng.GenerateBlock(key, key.size());
+	prng.GenerateBlock(iv, iv.size());
+
+	string plaintext = Generator(100 * 1024);// text length 100kb 
+	string ciphertext="", recovered_text="";
+  
+	try
+	{
+
+		auto start_time = clock();
+		EAX<AES>::Encryption e;
+		e.SetKeyWithIV(key, key.size(), iv);
+
+		StringSource s(plaintext, true,
+			new AuthenticatedEncryptionFilter(e,
+				new StringSink(ciphertext)
+			) // AuthenticatedEncryptionFilter
+		); // StringSource
+		auto end_time = clock();
+		double seconds = (double)(end_time -start_time) / CLOCKS_PER_SEC;
+		cout << "\nEAX AES encryption time: " << setprecision(10) << seconds << " seconds";
+		}
+		catch (const Exception& e)
+		{
+			cerr << e.what() << endl;
+			exit(1);
+
+	}
+
+	try
+	{
+		auto start_time = clock();
+		EAX<AES>::Decryption d;
+		d.SetKeyWithIV(key, key.size(), iv);
+
+		StringSource s(ciphertext, true,
+			new AuthenticatedDecryptionFilter(d,
+				new StringSink(recovered_text)
+			) // AuthenticatedDecryptionFilter
+		); // StringSource
+		auto end_time = clock();
+		double seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+		cout << "\nEAX AES decryption time: " << setprecision(10) << seconds << " seconds";
+	}
+	catch (const Exception& e)
+	{
+		cerr << e.what() << endl;
+		exit(1);
+	}
+	cout << endl;
+
+	plaintext = Generator(100 * 1024);// text length 100kb 
+	try
+	{
+		auto start_time = clock();
+		CFB_Mode< AES >::Encryption e;
+		e.SetKeyWithIV(key, key.size(), iv);
+
+		StringSource s(plaintext, true,
+			new StreamTransformationFilter(e,
+				new StringSink(ciphertext)
+			) // StreamTransformationFilter
+		); // StringSource
+		auto end_time = clock();
+		double seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+		cout << "\nCFB AES encryption time: " << setprecision(10) << seconds << " seconds";
+	}
+	catch (const Exception& e)
+	{
+		cerr << e.what() << endl;
+		exit(1);
+	}
+
+	try
+	{
+		auto start_time = clock();
+		CFB_Mode< AES >::Decryption d;
+		d.SetKeyWithIV(key, key.size(), iv);
+		StringSource s(ciphertext, true,
+			new StreamTransformationFilter(d,
+				new StringSink(recovered_text)
+			) // StreamTransformationFilter
+		); // StringSource
+		auto  end_time = clock();
+		double seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+		cout << "\nCFB AES decryption time: " << setprecision(10) << seconds << " seconds";
+	}
+	catch (const Exception& e)
+	{
+		cerr << e.what() << endl;
+		exit(1);
+	}
+	cout << endl;
+	// -------- SALSA20 ------START-------------------------
+	{
+		AutoSeededRandomPool prng;
+		HexEncoder encoder(new FileSink(cout));
+
+		string plaintext = Generator(500 * 1024); // text length 500kb 
+		string ciphertext, recovertext;
+
+		SecByteBlock key(16), iv(8);
+		prng.GenerateBlock(key, key.size()); // set key 
+		prng.GenerateBlock(iv, iv.size()); // set IV
+
+		try
+		{
+			Salsa20::Encryption enc;
+			enc.SetKeyWithIV(key, key.size(), iv, iv.size());
+
+			// Encryption
+			auto start_time = clock();
+			ciphertext.resize(plaintext.size());
+			enc.ProcessData((byte*)& ciphertext[0], (const byte*)plaintext.data(), plaintext.size());
+			auto  end_time = clock();
+			double seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+			cout << "\nSalsa20 encryption time: " << setprecision(10) << seconds << " seconds";
+
+		}
+		catch (const Exception& e)
+		{
+			cerr << e.what() << endl;
+			exit(1);
+		}
+		try
+		{
+			Salsa20::Decryption dec;
+			dec.SetKeyWithIV(key, key.size(), iv, iv.size());
+
+			// Decryption
+			auto start_time = clock();
+			recovertext.resize(ciphertext.size());
+			dec.ProcessData((byte*)& recovertext[0], (const byte*)ciphertext.data(), ciphertext.size());
+			auto  end_time = clock();
+			double seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+			cout << "\nSalsa20 decryption time: " << setprecision(10) << seconds << " seconds";
+		}
+		catch (const Exception& e)
+		{
+			cerr << e.what() << endl;
+			exit(1);
+		}
+		
+
+	}
+	cout << endl;
+	// -------- SALSA20 ------END----------------------
+
+	// -------- SHA256 ------START----------------------
+	{
+
+		SHA256 hash; 
+		string text = Generator(1000*1024); // text length 1000kb 
+		string digest;
+		auto start_time = clock();
+		hash.Update((const byte*)text.data(), text.size());
+		digest.resize(hash.DigestSize());
+		hash.Final((byte*)& digest[0]);
+		auto  end_time = clock();
+		double seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+		cout << "\nSHA hasing time: " << setprecision(10) << seconds << " seconds";
+		cout << "\nDigest: ";
+		StringSource s(digest, true, new Redirector(encoder));
+		cout <<endl;
+	}
+	// -------- SHA256 ------END----------------------
+	cout << endl;
+	// -------- RSA ------START--------------------
+	{
+
+		AutoSeededRandomPool rand;
+		RSA::PrivateKey privateKey;
+		auto start_time = clock();
+		privateKey.GenerateRandomWithKeySize(rand,1024);
+		RSA::PublicKey publicKey(privateKey);
+		auto  end_time = clock();
+		double seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+		cout << "\nRSA generation time: " << setprecision(10) << seconds << " seconds";
+
+	// Sign and Encode
+		RSASSA_PKCS1v15_SHA_Signer signer(privateKey);
+
+		string plaintext = Generator(80);
+		string signature = "";
+		start_time = clock();
+		StringSource ss1(plaintext, true,
+			new SignerFilter(rand, signer,
+				new StringSink(signature)
+			) // SignerFilter
+		); // StringSource
+
+		end_time = clock();
+		seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+		cout << "\nRSA signing time: " << setprecision(10) << seconds << " seconds";
+
+	// Verify and Recover
+		start_time = clock();
+		RSASSA_PKCS1v15_SHA_Verifier verifier(publicKey);
+
+		StringSource ss2(plaintext + signature, true,
+			new SignatureVerificationFilter(
+				verifier, NULL,
+				SignatureVerificationFilter::THROW_EXCEPTION
+			) // SignatureVerificationFilter
+		); // StringSource
+		end_time = clock();
+		seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+		cout << "\nVerification  time: " << setprecision(10) << seconds << " seconds";
+
+	// Encryption
+		start_time = clock();
+		string  ciphertext, recoveredtext;
+		RSAES_OAEP_SHA_Encryptor e(publicKey);
+
+		StringSource s1(plaintext, true,
+			new PK_EncryptorFilter(rand, e,
+				new StringSink(ciphertext)
+			) // PK_EncryptorFilter
+		); // StringSource
+		end_time = clock();
+		seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+		cout << "\n RSA encryption time: " << setprecision(10) << seconds << " seconds";
+
+	// Decryption
+		start_time = clock();
+		RSAES_OAEP_SHA_Decryptor d(privateKey);
+
+		StringSource s2(ciphertext, true,
+			new PK_DecryptorFilter(rand, d,
+				new StringSink(recoveredtext)
+			) // PK_DecryptorFilter
+		); // StringSource
+		end_time = clock();
+		seconds = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+		cout << "\n RSA decryption time: " << setprecision(10) << seconds << " seconds";
+	}
+	cout << endl;
+	// --------  RSA------END----------------------
+
+	return 0;
+}
