@@ -1,0 +1,31 @@
+<form [formGroup]="userForm"  (ngSubmit)="submit()" >
+  <div class="form-group">
+    <label for="inputProjectName">Name</label>
+    <input type="text" class="form-control" id="inputProjectName"
+           formControlName="name"
+           [(ngModel)]="username">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <!--<div class="container-fluid mr-5 mt-5">
+    <div [className]="'alert mt-2 ' + progressTypeClass" role="alert" *ngIf="showSaveProgress">
+      {{progressMessage}}
+    </div>
+  </div>-->
+  <div class="row" *ngIf="publicKey">
+    <div class="col">
+      <p>Public Key</p>
+    </div>
+    <div class="col overflow-sm-auto text-break" style="height: 150px;  overflow-y: scroll">
+      {{publicKey}}
+    </div>
+  </div>
+  <div class="row" *ngIf="privateKey">
+    <div class="col">
+      <p>Private Key</p>
+    </div>
+    <div class="col overflow-sm-auto text-break" style="height: 150px;  overflow-y: scroll">
+      {{privateKey}}
+    </div>
+  </div>
+</form>
