@@ -1,0 +1,32 @@
+<form [formGroup]="messageForm"  (ngSubmit)="submit()" >
+  <div class="form-group">
+    <label >Sender</label>
+    <input type="text" class="form-control"
+           formControlName="sender"
+           [(ngModel)]="messageDto.sender">
+    <label>Receiver</label>
+    <input type="text" class="form-control"
+           formControlName="receiver"
+           [(ngModel)]="messageDto.receiver">
+    <label>Message</label>
+    <input type="text" class="form-control"
+           formControlName="plainText"
+           [(ngModel)]="messageDto.plainText">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <!--<div class="container-fluid mr-5 mt-5">
+    <div [className]="'alert mt-2 ' + progressTypeClass" role="alert" *ngIf="showSaveProgress">
+      {{progressMessage}}
+    </div>
+  </div>-->
+  <div class="row" *ngIf="message">
+    <div class="col">
+      <p>Public Key</p>
+    </div>
+    <div class="col overflow-sm-auto" style="height: 150px;  overflow-y: scroll">
+      {{message?.message}}
+    </div>
+  </div>
+
+</form>
