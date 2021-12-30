@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "O8RXwBWI9fj8cRrFDjz1Oi4OXTQPTFlM3oEBbbf6pi5urWGHYS6pioZgEI8GndrF78pniWAohtX/lN5wDk8cmw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ellun\\source\\repos\\lab3_ElGamal_1\\lab3_ElGamal_1\\lab3_ElGamal_1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ellun\\.nuget\\packages\\portable.bouncycastle\\1.9.0\\portable.bouncycastle.1.9.0.nupkg.sha512"
+  ],
+  "logs": []
+}

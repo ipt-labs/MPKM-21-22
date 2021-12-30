@@ -1,0 +1,10 @@
+is_global = true
+build_property.TargetFramework = net5.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.PublishSingleFile = 
+build_property.IncludeAllContentForSelfExtract = 
+build_property._SupportedPlatformList = Android,iOS,Linux,macOS,Windows
+build_property.RootNamespace = lab3_ElGamal_1
+build_property.ProjectDir = C:\Users\ellun\Source\Repos\MPKM-21-22\lab3\Moroziuk_Getman_Mitrofanova\lab3_ElGamal_1\lab3_ElGamal_1\
